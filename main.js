@@ -1,7 +1,8 @@
 let productCards = Array.from(document.querySelectorAll('.product-card'));
-let seasonSelector = Array.from(document.querySelectorAll('option'));
+let seasonSelector = document.getElementById('season-selector');
 let productsData = [];
 let departmentsData = [];
+let season = '';
 
 let xhr1 = new XMLHttpRequest();
 xhr1.addEventListener('load', function () {
@@ -13,8 +14,6 @@ xhr1.addEventListener('load', function () {
 let xhr2 = new XMLHttpRequest();
 xhr2.addEventListener('load', function () {
 	departmentsData.push(JSON.parse(xhr2.responseText));
-	updatePrice();
-
 });
 
 xhr1.open('GET', 'products.json');
@@ -41,34 +40,24 @@ function getDepartment(num) {
 	}
 }
 
-
-seasonSelector.addEventListner('change', () => {
-
-});
-
-function updatePrice(arr) {
+function updatePrice(arr, index) {
 	for(let i = 0; i < arr.length; i++) {
 		let price = arr[i].innerText;
-		let discounted = price - (price * departmentsData[0].categories[0].discount);
+		let discounted = price - (price * departmentsData[0].categories[index].discount);
 		arr[i].innerText = discounted.toFixed(2);
 	}
 }
 
+seasonSelector.addEventListener('change', () => {
+	season = seasonSelector.value;
+	if (season === 'Autumn') {
+		updatePrice(document.getElementsByClassName('1'), 0);
+	} else if (season === 'Winter') {
+		updatePrice(document.getElementsByClassName('2'), 1);
+	} else if (season === 'Spring') {
+		updatePrice(document.getElementsByClassName('3'), 2);
+	}
+});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//status - prices are being discounted on change,
+//have to find a way to reset other prices to original
